@@ -1,0 +1,49 @@
+﻿@page
+@model DocumentUploaderModel
+@{
+    ViewData["Title"] = "Document Uploader";
+}
+
+<h2>Document Uploader</h2>
+
+<form method="post" enctype="multipart/form-data">
+    <div class="row">
+        <div class="col-md-4 col-sm-12">
+            <div class="form-group">
+                <label for="clientId">Client ID:</label>
+                <input type="text" class="form-control" asp-for="ClientId" />
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-12">
+            <div class="form-group">
+                <label for="agentId">Agent ID:</label>
+                <input type="text" class="form-control" asp-for="AgentId" />
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-12">
+            <div class="form-group">
+                <label for="databaseName">Database Name:</label>
+                <input type="text" class="form-control" asp-for="DatabaseName" />
+            </div>
+        </div>
+    </div>
+    <div class="row mt-2">
+        <div class="col-md-4 col-sm-12">
+            <div class="form-group">
+                <label for="fileInput">Select File:</label>
+                <input type="file" id="fileInput" class="form-control-file" asp-for="File" />
+            </div>
+        </div>
+        <div class="col-md-4 col-sm-12">
+            <button type="submit" class="btn btn-primary">Upload Document</button>
+        </div>
+    </div>
+</form>
+
+@if (!string.IsNullOrEmpty(Model.NotificationMessage))
+{
+    <div class="alert alert-dismissible fade show @Model.NotificationType" role="alert">
+        @Model.NotificationMessage
+        <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+    </div>
+}

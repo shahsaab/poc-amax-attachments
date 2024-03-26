@@ -1,0 +1,6 @@
+@poc_amax_attachments_HostAddress = http://localhost:5146
+
+GET {{poc_amax_attachments_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
