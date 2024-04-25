@@ -4,6 +4,7 @@ using Amazon.S3.Transfer;
 using Microsoft.AspNetCore.Mvc;
 using poc_amax_attachments.Data;
 using System;
+using System.IO;
 
 namespace poc_amax_attachments.Controllers
 {
@@ -19,8 +20,31 @@ namespace poc_amax_attachments.Controllers
             _s3Client = s3Client;
         }
 
+        [HttpGet("GetOne")]
+        public async Task<IActionResult> GetFile(string FileUrl)
+        {
+            var objectRequest = new GetObjectRequest
+            {
+                BucketName = _bucketName,
+                Key = FileUrl
+            };
+
+            var response = await _s3Client.GetObjectAsync(objectRequest);
+
+            if (response == null)
+                return NotFound();
+                
+            MemoryStream memoryStream = new MemoryStream();
+
+            using (Stream responseStream = response.ResponseStream)
+            {
+                responseStream.CopyTo(memoryStream);
+            }
+            return Ok (memoryStream);
+        }
+
         [HttpGet("list")]
-        public async Task<IActionResult> ListFiles(string clientId, string agentId, string databaseName)
+        public async Task<IActionResult> ListFiles(string databaseName)
         {
             try
             {
@@ -86,7 +110,7 @@ namespace poc_amax_attachments.Controllers
                 string agentId = Request.Form["agentId"].ToString();
                 string databaseName = Request.Form["databaseName"].ToString();
 
-                int SupId = AddDocumentInDb(clientId, agentId);
+                //int SupId = AddDocumentInDb(clientId, agentId);
 
                 // Ensure the database folder exists before uploading the file
                 await EnsureDatabaseFolderExistsAsync(databaseName);
@@ -101,7 +125,7 @@ namespace poc_amax_attachments.Controllers
                 var fileUrl = GetFileUrl(key);
 
                 //Update Status throwing error: Data cannot be null
-                UpdateDocumentStatus(SupId, fileUrl, file.FileName, true);
+                //UpdateDocumentStatus(SupId, fileUrl, file.FileName, true);
 
                 return Ok(new { Url = fileUrl });
             }
